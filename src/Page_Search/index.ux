@@ -1,0 +1,380 @@
+<!-- 搜索页面为全屏页面，需要关闭titleBar，请在manifest.json中配置dispaly.pages设置以下信息：
+"pages": {
+  "页面目录": { 
+    "titleBar": false,
+    "menu":false,
+    "titleBarBackgroundColor": "#ffffff"
+  }
+} 
+
+本页面引用了高亮组件，c_hight_light
+ 
+<import name="page10_1" src="./component/c_hight_light"></import>
+<import name='swi' src='./component/c_item_container_swiper'></import>-->
+<template>
+  <div class="container">
+
+    <div class="search_bar_container">
+      <!--返回主页 -->
+      <div class="image_search_back_div_search" onclick="back">
+        <image class="image_search_back" src="./img/search_back.png"></image>
+      </div>
+      <!--点击图标 搜索 -->
+      <div class="search_close">
+        <div class="image_search_back_div" onclick="search">
+          <image class="image_search_result " src="./img/search.png"></image>
+        </div>
+        <!--输入搜索内容and删除搜索输入栏内容 -->
+        <input class="search" id="search" name="search" value="{{inputValue}}" placeholder="查询垃圾" onchange="updateValue()"></input>
+        <div sho w="{{inputValue!=''}}" class="image_search_back_div" onclick="resetSearchValue">
+          <image class="image_search_result close_size" src="./img/search_close.png"></image>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <!-- 搜素热词、历史显示区域 -->
+      <block if="{{showPageType === 'searchBar'}}">
+        <!-- 热门搜索 -->
+        <div class="div_allsearch">
+          <div class="change_search">
+            <text class="all_find">热门搜索</text>
+          </div>
+          <div class="spare_bar"></div>
+          <div class="change_content">
+            <block for="{{list}}">
+              <a class="a_item" onclick="setInputValue($item.name)">{{$item.name}}</a>
+            </block>
+          </div>
+        </div>
+        <div class="div_allsearch">
+          <div class="change_search">
+            <text class="all_find">搜索历史</text>
+            <a class="a_change_search" onclick="clearHis">清空</a>
+          </div>
+          <div class="spare_bar"></div>
+          <div class="change_content">
+            <block for="{{hisList}}">
+              <a class="a_item" onclick="setInputValue($item)">{{$item}}</a>
+            </block>
+          </div>
+        </div>
+      </block>
+
+      <!-- 搜索结果页面展示区域 -->
+      <block if="{{showPageType ==='result'}}">
+        <div class="result_number">
+          <text else="{{searchResults.length<=0}}">没有找到相关垃圾</text>
+        </div>
+        <div class="single-result">
+          <block for="{{searchResults}}">
+            <block if="{{$item.name === inputValue}}">
+              <div class="single-item">
+                <!-- 垃圾类别图片 -->
+                <div>
+                  <image class="single-class-image" src="{{$item.src}}"></image>
+                </div>
+                <div class="single-description">
+                  <text class="single-title">{{$item.name}}</text>
+                  <text class="single-advice">{{$item.advice}}</text>
+                </div>
+                <div class="search-related">
+                  <text class="single-related">{{$item.related}}</text>
+                </div>
+              </div>
+              <div class="single-line">
+                <text></text>
+              </div>
+            </block>
+          </block>
+        </div>
+      </block>
+    </div>
+  </div>
+</template>
+
+<style>
+  .container {
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+  }
+
+  .panel {
+    width: 700px;
+    height: 100%;
+    margin-left: 33px;
+    margin-right: 33px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .title {
+    font-size: 100px;
+  }
+
+  .search_bar_container {
+    align-items: center;
+    width: 696px;
+    height: 100px;
+    margin-left: 17px;
+    margin-right: 33px;
+  }
+
+  .search_close {
+    background-color: #f2f2f2;
+    align-items: center;
+    border-radius: 8px;
+    height: 64px;
+    width: 608px;
+  }
+
+  .search {
+    width: 440px;
+    height: 40px;
+    color: #1a1a1a;
+    font-size: 28px;
+    line-height: 40px;
+    margin-right: 33px;
+  }
+
+  .image_search_back_div_search {
+    width: 84px;
+    height: 100px;
+    align-items: center;
+    justify-content: center;
+
+  }
+
+  .image_search_back_div {
+    width: 84px;
+    height: 100px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .image_search_back {
+    width: 40px;
+    height: 40px;
+  }
+
+
+
+  .div_allsearch {
+    border-radius: 5px;
+    flex-direction: column;
+  }
+
+  .change_search {
+    width: 684px;
+    height: 30px;
+    margin-top: 41px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .spare_bar {
+    width: 684px;
+    height: 16px;
+  }
+
+  .a_change_search {
+    font-size: 27.1px;
+    color: #CD2325;
+    height: 34px;
+    line-height: 34px;
+    padding-left: 10px;
+    text-align: center;
+  }
+
+  .all_find {
+    font-size: 31px;
+    color: #1a1a1a;
+    height: 34px;
+    line-height: 34px;
+  }
+
+  .change_content {
+    width: 682px;
+    flex-wrap: wrap;
+  }
+
+  .a_item {
+    background-color: rgba(0, 0, 0, 0.05);
+    text-align: center;
+    height: 50px;
+    border-radius: 8.3px;
+    line-height: 50px;
+    padding: 10px 20px;
+    margin: 17px 17px 0 0;
+    font-size: 25px;
+    color: #000000;
+    lines: 1;
+  }
+
+  .image_search_result {
+    width: 33px;
+    height: 33px;
+    margin-left: 17px;
+    margin-right: 17px;
+  }
+
+
+
+  .auto_div {
+    width: 100%;
+    height: 100%;
+    align-items: flex-end;
+    flex-direction: column;
+  }
+
+
+
+  .result_number {
+    width: 700px;
+    font-size: 20px;
+    margin-bottom: 17px;
+  }
+
+
+  .close_size {
+    width: 30px;
+    height: 30px;
+  }
+
+
+  /* 搜索结果列表 */
+
+  .single-result {
+    border-color: #0000ff;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .single-item {
+    margin: 17px 0 11px 0;
+  }
+
+  .single-class-image {
+    
+    
+    margin: auto;
+    width: 40%;
+    /*width: 217px;
+    height: 290px;
+    margin-right: 33px;
+    border-radius: 8px;*/
+  }
+  
+  .single-title {
+    /*color: #000000;
+    font-size: 31.3px;
+    line-height: 40.6px;
+    font-weight: bold;
+    margin-bottom: 16px;*/
+    position: absolute;
+    left: 0px;
+    width: 300px;
+    border: 3px solid #73AD21;
+    padding: 10px;
+  }
+
+  .single-advice {
+   /*color: #1A1A1A;
+    opacity: 0.5;
+    font-size: 27.1px;
+    line-height: 34.9px;
+    margin-bottom: 49px;*/
+    
+    position: absolute;
+    left: 0px;
+    width: 300px;
+    border: 3px solid #73AD21;
+    padding: 10px;
+  }
+
+  .single_related{
+    margin-left: 40px;
+  }
+
+  .single-description {
+    flex-direction: column;
+    width: 434px;
+    align-self: center;
+  }
+
+</style>
+
+<script>
+  import router from '@system.router';
+  export default {
+    data: {
+      //
+      key: "",
+      inputValue: "",
+      showPageType: "searchBar",
+      list: [],
+      hisList: [],
+      searchResults:[]
+    },
+    onInit: function () {
+      //titlebar的状态，在manifest.json中display设置的
+      this.$page.setTitleBar({
+        menu: false
+      });
+
+      // 搜索热词设置接口：
+      this.list.push({ name: "苹果" }, { name: "玻璃瓶" }, { name: "纸巾" }, { name: "小龙虾" }, { name: "x光片" });
+           
+      // 搜索结果类型，需要说明数据结构和参数含义。
+      this.searchResults.push({ name: "苹果", src: './TO_DELETE/shi.jpg', advice: "无", related:"烂苹果是湿垃圾", }, { name: "玻璃瓶", src: './TO_DELETE/ke.jpg', advice: "可回收垃圾" ,related:"沾了赃物洗干净后的玻璃瓶是可回收物", }, { name: "纸巾", src: './TO_DELETE/gan.jpg', advice: "纸巾再湿也是干垃圾", related:"包着狗屎的纸巾我也不知道是什么垃圾", });
+    },
+    //增加搜索结果记录
+    addHistory() {
+      var isContain = false;
+      for (var i = 0; i < this.hisList.length; i++) {
+        if (this.hisList[i] === this.inputValue) {
+          isContain = true;
+          break;
+        }
+      }
+      if (!isContain) {
+        this.hisList.push(this.inputValue);
+      }
+    },
+    find() {
+      if (this.inputValue === null || this.inputValue === undefined || this.inputValue === "") {
+        return;
+      }
+      //增加历史搜索记录
+      this.addHistory();
+    },
+    search() {
+      if (this.inputValue === null || this.inputValue === undefined || this.inputValue === "") {
+        return;
+      }
+      this.showPageType = "result";
+      this.find();
+    },
+    updateValue(e) {
+      this.inputValue = e.text;
+      if (this.inputValue !== "" && this.inputValue !== undefined && this.inputValue !== null) {
+        this.showPageType = "result";
+        this.find();
+      }
+    },    
+    setInputValue(text) {
+      this.inputValue = text || "请输入搜索词汇";
+    },
+    clearHis() {
+      this.hisList = [];
+    },
+    back() {
+      router.back();
+    },
+    resetSearchValue() {
+      this.showPageType = "searchBar";
+      this.inputValue = "";
+    }
+  }
+</script>
