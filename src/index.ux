@@ -54,91 +54,45 @@
           <div class="spare_bar"></div>
           <div class="change_content">
             <block for="{{hisList}}">
-              <a  class="a_item" onclick="setInputValue($item)">{{$item}}</a>
+              <a class="a_item" onclick="setInputValue($item)">{{$item}}</a>
             </block>
           </div>
         </div>
       </block>
-      <div>
-        
-      </div>
-      
+
       <!-- 搜索结果页面展示区域 -->
       <block if="{{showPageType ==='result'}}">
         <div class="result_number">
-          <text if="{{searchResults.length===0}}">没有找到相关垃圾</text>
+          <text else="{{searchResults.length<=0}}">没有找到相关垃圾</text>
         </div>
         <div class="single-result">
           <block for="{{searchResults}}">
             <block if="{{$item.name === inputValue}}">
-              
+              <div class="single-item">
                 <!-- 垃圾类别图片 -->
-                <block>
-                  
-                 <div>
-                  <image class="single-class-image" src={{$item.src}}></image>
+                <div>
+                  <image class="single-class-image" src="{{$item.src}}"></image>
                 </div>
-                
-                </block>
-          
-
-                <div class="single-description">     
-                    <div>
-                  <image class="single-class-image" src={{$item.src}}></image>
-                </div>        
+                <div class="single-description">
                   <text class="single-title">{{$item.name}}</text>
-                  <div id="line1">
-                  </div>
+                  <text class="single-advice">{{$item.advice}}</text>
                 </div>
-   
-
-                 <div class="single-description1">                      
-                    <text id="suggestion"> 投放建议:  </text>
-                    <text class="single-advice">{{$item.advice}}</text>
-                 </div>            
-              
-              
+                <div class="search-related">
+                  <text class="single-related">{{$item.related}}</text>
+                </div>
+              </div>
               <div class="single-line">
                 <text></text>
               </div>
-               <div class="search-related row">
-                  <text>相关物品</text>
-                  <!-- <div id="line2">
-                  </div> -->
-                  <text class="single-related">{{$item.related}}</text>
-                </div>
             </block>
           </block>
         </div>
       </block>
-      <input type="button"  style="width: 50%;" value="查询" id="query" onclick="query" />
-      
     </div>
   </div>
-  
 </template>
 
 <style>
-  #line1, #line2,.single-line{
-    border: 10px solid #000000;
-    height: 10px;
-    width: 100%;
-  }
-  #suggestion{
-    margin-left: 1px; 
-    font-size: 30px;
-    padding-left: 1px;
-  }
-
-  .single-related{
-    color:#0000ff;
-    width: 50%;
-    margin-left: 100px
-  }
-  #query{
-    color: #ffffff;
-    background-color: #00bfff;
-  }
   .container {
     flex-direction: column;
     align-content: center;
@@ -304,7 +258,8 @@
   .single-class-image {
     
     
-   
+    margin: auto;
+    width: 40%;
     /*width: 217px;
     height: 290px;
     margin-right: 33px;
@@ -317,12 +272,10 @@
     line-height: 40.6px;
     font-weight: bold;
     margin-bottom: 16px;*/
-    /* position: absolute; */
+    position: absolute;
     left: 0px;
     width: 300px;
-    /* border: 3px solid #73AD21; */
-    font-size: 70px;
-    margin-left:200px;
+    border: 3px solid #73AD21;
     padding: 10px;
   }
 
@@ -332,13 +285,12 @@
     font-size: 27.1px;
     line-height: 34.9px;
     margin-bottom: 49px;*/
-    font-size: 40px;
+    
     position: absolute;
     left: 0px;
     width: 300px;
-    
-    /* border: 3px solid #73AD21; */
-    /* padding: 10px; */
+    border: 3px solid #73AD21;
+    padding: 10px;
   }
 
   .single_related{
@@ -347,23 +299,15 @@
 
   .single-description {
     flex-direction: column;
-    width: 100%;
-    /* align-self: center; */
+    width: 434px;
+    align-self: center;
   }
-  /* .single-description1{
-    flex-direction: row;
-  
-    width: 100%;
-  } */
-  .suggestion{
-    /* text-align: left;
-    margin-left: 0px;
-    position: absolute;
-    padding-left: 0px; */
-  }
+
 </style>
+
 <script>
   import router from '@system.router';
+
   export default {
     data: {
       //
@@ -371,14 +315,7 @@
       inputValue: "",
       showPageType: "searchBar",
       list: [],
-      hisList: [],
-      searchResults:[]
-    },
-    query:function(){
-     
-        var text =  this.$element("search");  //获取搜索框输入的数据
-       console.info(text);
-       
+      hisList: []
     },
     onInit: function () {
       //titlebar的状态，在manifest.json中display设置的
@@ -390,7 +327,7 @@
       this.list.push({ name: "苹果" }, { name: "玻璃瓶" }, { name: "纸巾" }, { name: "小龙虾" }, { name: "x光片" });
            
       // 搜索结果类型，需要说明数据结构和参数含义。
-      this.searchResults.push({ name: "苹果", src: "./TO_DELETE/shi.jpg", advice: "湿垃圾", related:"烂苹果是湿垃圾", }, { name: "玻璃瓶", src: "./TO_DELETE/ke.jpg", advice: "可回收垃圾" ,related:"沾了赃物洗干净后的玻璃瓶是可回收物", }, { name: "纸巾", src: "./TO_DELETE/gan.jpg", advice: "纸巾再湿也是干垃圾", related:"包着狗屎的纸巾我也不知道是什么垃圾", });
+      this.searchResults.push({ name: "苹果", src: './TO_DELETE/shi.jpg', advice: "无", related:"烂苹果是湿垃圾", }, { name: "玻璃瓶", src: './TO_DELETE/ke.jpg', advice: "可回收垃圾" ,related:"沾了赃物洗干净后的玻璃瓶是可回收物", }, { name: "纸巾", src: './TO_DELETE/gan.jpg', advice: "纸巾再湿也是干垃圾", related:"包着狗屎的纸巾我也不知道是什么垃圾", });
     },
     //增加搜索结果记录
     addHistory() {
@@ -439,6 +376,5 @@
       this.showPageType = "searchBar";
       this.inputValue = "";
     }
-   
   }
 </script>

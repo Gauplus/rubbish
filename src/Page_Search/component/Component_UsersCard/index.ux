@@ -1,0 +1,55 @@
+﻿<!-- 用户卡片有二个模板，
+一个是登录模板，一个是为登录模板 
+  通过 字段 isLogin 来决定是登录，还是为登录
+-->
+<import name="login" src="./component/c_login"></import>
+<import name="logout" src='./component/c_logout'></import>
+<template>
+  <!-- template里只能有一个根节点 -->
+  <div class="container">
+    <login if="{{isLogin}}" content="{{content_login}}"></login>
+    <logout if="{{!isLogin}}" content="{{content_logout}}"></logout>
+  </div>
+</template>
+
+<style>
+  .container {
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    width: 100%;
+  }
+</style>
+
+<script>
+
+  module.exports = {
+    data: {
+      isLogin: false,
+      content_login: {
+        userInfo: {
+          username: "Jiaqi"
+        },
+        //此数组数据可以设置不同个，组件里面会相应变化
+        expand: [
+          {
+            number: "12",
+            name: "优惠券"
+          },
+          {
+            number: "34",
+            name: "唯品币"
+          },
+          {
+            number: "56.00",
+            name: "零钱"
+          }
+        ]
+      },
+      content_logout: {
+        title: "登录华为账户",
+        subTitle: "大波红包等你拿xxxx"
+      }
+    }
+  }
+</script>

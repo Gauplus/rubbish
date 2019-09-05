@@ -1,0 +1,31 @@
+<import name="searchtitle" src="./c_search_title"></import>
+
+<template>
+  <div class="tutorial_page">
+    <searchtitle url="{{url}}" placeholder="{{placeHolder}}"></searchtitle>
+  </div>
+</template>
+
+<style lang="less">
+  .tutorial_page {
+    flex-direction: column;
+    padding: 20px 10px;
+
+    .tutorial-title {
+      font-weight: bold;
+    }
+  }
+</style>
+
+<script>
+  // 父组件
+  export default {
+    private: {
+      url: '/Page_Search',
+      placeHolder:'搜索栏示例'
+    },
+    onInit() {
+      this.$page.setTitleBar({ text: '搜索组件示例页面' })
+    }
+  }
+</script>
